@@ -1,16 +1,19 @@
-from transformers import AutoToenizer, AutoModelForCausalLM, Trainer, TrainingArguments
+from transformers import AutoTokenizer, AutoModelForCausalLM, Trainer, TrainingArguments
 from datasets import load_dataset
 
 MODEL_ID = "TinyLlama/TinyLlama-1.1B-intermediate-step-1431k-3T"
 
 tokenizer = AutoTokenizer.from_pretrained(MODEL_ID)
+tokenizer.pad_token = tokenizer.eos_token
 model = AutoModelForCausalLM.from_pretrained(MODEL_ID)
 
-dataset = load_dataset("JSON", data_files="stories.jsonl")
+dataset = load_dataset("json", data_files="stories.jsonl")
 
 def format(ex):
     text = f"You are a reflective narrator.\nUser: {ex['prompt']}\nNarrator: {ex['response']}"
-    return tokenizer(text, truncation=True, padding="max_length", max_length=2048)
+    tokenized = tokenizer(text, truncation=True, padding="max_length", max_length=2048)
+    tokenized['labels'] = tokenized['input_ids'].copy()
+    return tokenized
 
 dataset = dataset.map(format, remove_columns=["prompt", "response"])
 
@@ -28,5 +31,8 @@ trainer = Trainer(
     train_dataset=dataset["train"],
 )
 
+print("Starting training...")
 trainer.train()
+print("Training completed!")
 trainer.save_model("model/storyai")
+tokenizer.save_pretrained("model/storyai")
