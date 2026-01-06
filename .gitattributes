@@ -1,5 +1,0 @@
-model/storyai/* filter=lfs diff=lfs merge=lfs -text
-ai/model/storyai/checkpoint-*/model.safetensors filter=lfs diff=lfs merge=lfs -text
-ai/model/storyai/checkpoint-*/optimizer.pt filter=lfs diff=lfs merge=lfs -text
-thestory/ai/model/storyai/checkpoint-*/model.safetensors filter=lfs diff=lfs merge=lfs -text
-thestory/ai/model/storyai/checkpoint-*/optimizer.pt filter=lfs diff=lfs merge=lfs -text
