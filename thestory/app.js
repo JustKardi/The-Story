@@ -12,7 +12,7 @@ app.post('/api/generate', (req, res) => {
   const prompt = req.body.prompt;
 
   if (!prompt || !prompt.trim()) {
-    return res.status(400).json({ error: 'Empty prompt' });
+    return res.status(400).jsonc({ error: 'Empty prompt' });
   }
 
   const python = spawn(
