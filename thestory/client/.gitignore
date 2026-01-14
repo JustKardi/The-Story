@@ -25,3 +25,4 @@ dist-ssr
 
 # Ignore AI model checkpoints
 thestory/ai/model/storyai/
+thestory/ai/model/future/
