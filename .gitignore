@@ -1,1 +1,5 @@
-thestory/ai/model/storyai/
+thestory/ai/model/
+
+
+node_modules/
+**/node_modules/
