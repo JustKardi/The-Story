@@ -1,17 +1,36 @@
-prompt = """You analyze situations and predict realistic consequences.
+import os
+import sys
+import torch
+from transformers import AutoTokenizer, AutoModelForCausalLM
 
-Conditions:
-A city blocks trade routes during a drought.
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+MODEL_PATH = os.path.join(BASE_DIR, "model", "future") 
+BASE_MODEL = "TinyLlama/TinyLlama-1.1B-intermediate-step-1431k-3T" 
 
-Outcome:
-"""
+tokenizer = AutoTokenizer.from_pretrained(BASE_MODEL)
+tokenizer.pad_token = tokenizer.eos_token  
 
-inputs = tokenizer(prompt, return_tensors="pt")
-out = model.generate(
-    **inputs,
-    max_new_tokens=80,
-    temperature=0.3,
-    do_sample=True
-)
+model = AutoModelForCausalLM.from_pretrained(MODEL_PATH, torch_dtype=torch.float32)
+model.eval()
 
-print(tokenizer.decode(out[0], skip_special_tokens=True))
+if len(sys.argv) < 2:
+    print("Usage: python infer.py 'Your prompt here'")
+    sys.exit(1)
+
+prompt = sys.argv[1]
+
+inputs = tokenizer(prompt, return_tensors="pt", padding=True, truncation=True)
+
+with torch.no_grad():
+    outputs = model.generate(
+        input_ids=inputs["input_ids"],
+        attention_mask=inputs["attention_mask"], 
+        max_new_tokens=120,
+        do_sample=True,
+        temperature=0.8,
+        pad_token_id=tokenizer.eos_token_id 
+    )
+
+
+text = tokenizer.decode(outputs[0], skip_special_tokens=True)
+print(text)
