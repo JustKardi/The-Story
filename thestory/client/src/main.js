@@ -11,7 +11,11 @@ submitButton.addEventListener('click', async () => {
     .filter(p => p.length > 0);
 
   const predictResult = await sendPredictPrompt(prompts);
-  const result = await sendPrompt(predictResult + prompts);
+  const combinedPrompts = [
+    predictResult,
+    ...prompts
+  ]
+  const result = await sendPrompt(combinedPrompts);
   outputText.textContent = result;
 });
 
@@ -39,7 +43,6 @@ async function sendPrompt(prompts) {
 }
 
 async function sendPredictPrompt(prompt) {
-  let output = '';
   let input = '';
 
   for (let i = 0; i < prompt.length; i++) {
@@ -51,7 +54,7 @@ async function sendPredictPrompt(prompt) {
     header: {
       'Content-Type': 'application/json'
     },
-    body: input
+    body: JSON.stringify({ prompt: input })
   })
 
   if (!res.ok) {
@@ -59,7 +62,5 @@ async function sendPredictPrompt(prompt) {
   }
 
   const data = await res.json();
-  output += data.response + ' ';
-
-  return output.trim();
+  return data.response.trim();
 }
