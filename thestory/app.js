@@ -16,7 +16,7 @@ app.post('/api/generate', (req, res) => {
   }
 
   const python = spawn(
-    'ai/venv/Scripts/python.exe',
+    'ai/venv_directml/Scripts/python.exe',
     ['ai/infer.py', prompt]
   );
 
@@ -56,7 +56,7 @@ app.post('/api/predict', (req, res) => {
   }
 
   const python = spawn(
-    'ai/venv/Scripts/python.exe',
+    'ai/venv_directml/Scripts/python.exe',
     ['ai/predictor_inference.py', prompt]
   );
 

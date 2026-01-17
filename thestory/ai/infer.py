@@ -10,7 +10,7 @@ BASE_MODEL = "TinyLlama/TinyLlama-1.1B-intermediate-step-1431k-3T"  # original m
 tokenizer = AutoTokenizer.from_pretrained(BASE_MODEL)
 tokenizer.pad_token = tokenizer.eos_token  # ensures padding token is set
 
-model = AutoModelForCausalLM.from_pretrained(MODEL_PATH, torch_dtype=torch.float32)
+model = AutoModelForCausalLM.from_pretrained(MODEL_PATH, torch_dtype=torch.float16)
 model.eval()
 
 if len(sys.argv) < 2:
@@ -21,13 +21,17 @@ prompt = sys.argv[1]
 
 inputs = tokenizer(prompt, return_tensors="pt")
 
-with torch.no_grad():
+with torch.inference_mode():
     outputs = model.generate(
         **inputs,
         max_new_tokens=120,
         do_sample=True,
-        temperature=0.8,
+        temperature=0.7,
+        top_p=0.9,
+        repetition_penalty=1.2,
+        eos_token_id=tokenizer.eos_token_id,
     )
+
 
 text = tokenizer.decode(outputs[0], skip_special_tokens=True)
 print(text)

@@ -51,7 +51,7 @@ async function sendPredictPrompt(prompt) {
 
   const res = await fetch('/api/predict', {
     method: 'POST',
-    header: {
+    headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({ prompt: input })

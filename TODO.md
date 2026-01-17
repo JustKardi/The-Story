@@ -1,0 +1,4 @@
+- [x] Edit thestory/app.js to change Python executable path from 'ai/venv/Scripts/python.exe' to 'ai/venv_directml/Scripts/python.exe' in /api/generate endpoint
+- [x] Edit thestory/app.js to change Python executable path from 'ai/venv/Scripts/python.exe' to 'ai/venv_directml/Scripts/python.exe' in /api/predict endpoint
+- [x] Edit thestory/client/src/main.js to fix 'header' to 'headers' in sendPredictPrompt function
+- [x] Test the application by running the server and making a request to /api/predict
